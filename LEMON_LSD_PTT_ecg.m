@@ -98,7 +98,7 @@ ecg.t_resamp_ms = ecg.t_resampled*1000;
 %%
 % ANPASSEN
 
-[ecg.peaks,ecg.locs] = findpeaks(ecg.zdata_cropped_resamp,'minpeakdistance',.5*newSf,'minpeakheight',1);%.3)%1); % tweak peak detection
+[ecg.peaks,ecg.locs] = findpeaks(ecg.zdata_cropped_resamp,'minpeakdistance',.7*newSf,'minpeakheight',1);%.3)%1); % tweak peak detection
 %[ecg.peaks,ecg.locs] = findpeaks(ecg.zdata_cropped_resamp,'minpeakdistance',900);%,'minpeakheight',1);%.3)%1); % tweak peak detection
 
 %[ecg.peaks3,ecg.locs3] = findpeaks(ecg.zdata_cropped_resamp,'minpeakdistance',.5*newSf); % tweak peak detection

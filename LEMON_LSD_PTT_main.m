@@ -1,7 +1,7 @@
 %% calculate HRV/PTT/PWV in 5 min windows of resting-state
 % as collection of functions
 % michael.gaebler@gmail.com
-% 21.07.2015
+% 6.8.2015
 
 clear all
 close all;
