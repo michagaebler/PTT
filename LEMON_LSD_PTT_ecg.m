@@ -17,6 +17,14 @@ brainproducts = dir(fullfile(ecg.dir, '*.eeg'));
 
 cd(subdir) % springe ins Datenverzeichnis
 
+% detect LEMON round of subject
+[pathstr , name , ext] = fileparts(subdir);
+
+if str2num(name(6:end)) < 57
+    round1 = 1;
+else
+    round1 = 0;
+end
 
 %for ifile = 1:length(brainproducts)
 
@@ -25,7 +33,7 @@ ecg.name = brainproducts.name;
 
 
 %[path, name, ext] = fileparts(fullfile(datadir, brainproducts.name)); % Aufdröseln der Dateinamen
-% try
+try
     [ecg.data,ecg.sf,ecg.elab,ecg.marker] = gradcorr(ecg.name(1:end-4),'R128',1); % correct ECG (updated gradcorr)
     
     %test=readGenericEEG_raw2(ecg.name(1:end-4),1,'raw');
@@ -33,36 +41,42 @@ ecg.name = brainproducts.name;
     
     %[ecg.data,ecg.sf,ecg.elab] = gradcorr_v2(ecg.name(1:end-4),'R128',1); % correct ECG (updated gradcorr)
     
-% catch
-%      [ecg.data,ecg.sf,ecg.elab,ecg.marker] = ...
-%      gradcorr_ot_mg(ecg.name(1:end-4),1400,1); % correct ECG (updated gradcorr) NO TRIGGER VERSION
-% end
+    %%%%%%% OLD CROP
+    %ecg.data_cropped = -ecg.data(ecg.marker(ecg_start,1):ecg.marker(ecg_stop,1));
+    
+    
+    
+    %%%%%%%% NEW CROP: crop preceding sequences (EPI test?, quin pilot?)
+    
+    
+    voldiff = diff(ecg.marker);
+    mostfrq = mode(voldiff);
+    
+    onset = 1;
+    while  ~(voldiff(onset)-mostfrq < 3 & voldiff(onset+1)-mostfrq < 3 & voldiff(onset+2)-mostfrq < 3)
+        onset = onset + 1;
+    end
+    
+    % ecg.data_cropped = -ecg.data(ecg.marker(onset,1):ecg.marker(ecg_stop,1)); % changed
+    
+    ecg.data_cropped = -ecg.data(ecg.marker(onset,1):ecg.marker((onset + ecg_stop)-1,1)); % changed 2.2.2015 MG
+    
+    
+    
+    
+catch
+    
+    [ecg.data,ecg.sf,ecg.elab,ecg.marker] = gradcorr_ot_mg(ecg.name(1:end-4),1400,1,round1); % correct ECG (updated gradcorr) NO TRIGGER VERSION
+    
+    
+    ecg.data_cropped = -ecg.data(ecg.marker(6):ecg.marker((6 + ecg_stop))-1);
+    % % crop when there are no triggers --> arbitrarily skipped first 3
+    % triggers (MG 7.8.2015)
+end
 
 %
 
-%%%%%%% OLD CROP
-%ecg.data_cropped = -ecg.data(ecg.marker(ecg_start,1):ecg.marker(ecg_stop,1));
 
-
-
-%%%%%%%% NEW CROP: crop preceding sequences (EPI test?, quin pilot?)
-
-
-voldiff = diff(ecg.marker);
-mostfrq = mode(voldiff);
-
-onset = 1;
-while  ~(voldiff(onset)-mostfrq < 3 & voldiff(onset+1)-mostfrq < 3 & voldiff(onset+2)-mostfrq < 3)
-    onset = onset + 1;
-end
-
-% ecg.data_cropped = -ecg.data(ecg.marker(onset,1):ecg.marker(ecg_stop,1)); % changed
-
-ecg.data_cropped = -ecg.data(ecg.marker(onset,1):ecg.marker((onset + ecg_stop)-1,1)); % changed 2.2.2015 MG
-
-% ecg.data_cropped = ...
-% -ecg.data(ecg.marker(onset):ecg.marker((onset + ecg_stop)-1));
-% % % crop when there are no triggers
 
 % figure, plot(ecg.data_cropped)
 %
@@ -98,7 +112,7 @@ ecg.t_resamp_ms = ecg.t_resampled*1000;
 %%
 % ANPASSEN
 
-[ecg.peaks,ecg.locs] = findpeaks(ecg.zdata_cropped_resamp,'minpeakdistance',.7*newSf,'minpeakheight',1);%.3)%1); % tweak peak detection
+[ecg.peaks,ecg.locs] = findpeaks(ecg.zdata_cropped_resamp,'minpeakdistance',.55*newSf,'minpeakheight',1);%.3)%1); % tweak peak detection
 %[ecg.peaks,ecg.locs] = findpeaks(ecg.zdata_cropped_resamp,'minpeakdistance',900);%,'minpeakheight',1);%.3)%1); % tweak peak detection
 
 %[ecg.peaks3,ecg.locs3] = findpeaks(ecg.zdata_cropped_resamp,'minpeakdistance',.5*newSf); % tweak peak detection

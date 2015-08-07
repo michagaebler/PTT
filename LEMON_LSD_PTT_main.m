@@ -21,7 +21,7 @@ savefi = 1; % do you wanna save files? 1 = yes
 showfi = 1;
 corrflag = 0;
 
-lemonsub = 149; % LEMON number
+lemonsub = 21; % LEMON number
 
 %sub = dir(fullfile(datadir,['*LEMON*', num2str(lemonsub)]));
 sub.name = ['LEMON', sprintf('%3.3d',lemonsub)];
@@ -81,10 +81,10 @@ if showfi
         'rv','MarkerFaceColor','r','LineWidth',3,'MarkerSize',12) ,
     hold on;
     plot(oxy.t_ms_zcropped,oxy.zdata_cropped,'g',...
-        oxy.t_ms_zcropped(oxy.locs_cropped),oxy.zdata_cropped(oxy.locs_cropped),...
+        oxy.t_ms_zcropped(oxy.locs),oxy.zdata_cropped(oxy.locs),...
         'mv','MarkerFaceColor','m','LineWidth',3,'MarkerSize',12)
     legend('ecg',['ecg pks (' num2str(length(ecg.locs)) ')'],...
-        'oxy', ['oxy pks (' num2str(length(oxy.locs_cropped)) ')'])
+        'oxy', ['oxy pks (' num2str(length(oxy.locs)) ')'])
     
     %datacursormode;
     %     figure;
@@ -121,7 +121,7 @@ end
 
 loc_s3 = loc_s2-1;  % updated MG 24.5.15, was loc_s2
 
-% while (oxy.locs_cropped(loc_s3) <= 900000)
+% while (oxy.locs(loc_s3) <= 900000)
 while sum(oxy.ibiso(loc_s2-1:loc_s3)) < 300000
     loc_s3 = loc_s3 + 1;
 end
