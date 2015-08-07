@@ -167,6 +167,7 @@ display(['found ', num2str(length(ecg.locs)), ' peaks; approx. ' num2str(length(
 ecg.ibisea = diff(ecg.locs);
 
 % if savefi
+
 %     dlmwrite(fullfile(dirout,[dirs(idir).name '_tachogram_ecg_auto.txt']),ibisea');
 %     display(['saved raw ECG tachogram (auto) to file for subject ' dirs(idir).name]);
 % end

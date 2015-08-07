@@ -21,7 +21,7 @@ savefi = 1; % do you wanna save files? 1 = yes
 showfi = 1;
 corrflag = 0;
 
-lemonsub = 21; % LEMON number
+lemonsub = 23; % LEMON number
 
 %sub = dir(fullfile(datadir,['*LEMON*', num2str(lemonsub)]));
 sub.name = ['LEMON', sprintf('%3.3d',lemonsub)];
